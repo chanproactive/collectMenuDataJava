@@ -9,8 +9,7 @@ import java.io.IOException
 
 class CloudVision() {
 
-    val base64 = "sdfa"
-    fun request() {
+    fun request(base64: String) {
         val json = "{\"requests\": [\n" +
                 "{\n" +
                 "\"features\": [{\n" +
@@ -44,6 +43,8 @@ class CloudVision() {
             override fun onResponse(call: Call, response: okhttp3.Response) {
                 if (response.isSuccessful) {
                     val body = response.body?.string()
+                    print(body)
+
                 }
                 call.cancel()
             }

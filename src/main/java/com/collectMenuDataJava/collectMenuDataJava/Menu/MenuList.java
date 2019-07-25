@@ -13,7 +13,16 @@ public class MenuList {
     @NotNull
     private String imageBase64;
 
+    public MenuList() {
+    }
 
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public String getImageBase64() {
+        return imageBase64;
+    }
     public void setId(String id) {
 
     }

@@ -18,7 +18,7 @@ class ExtractImage {
             if (imagesSource!!.size != 0) {
                     imageURL.add(imagesSource?.get(0)?.attr("src").toString())
             } else {
-                imageURL.add(" ")
+                imageURL.add("https://previews.123rf.com/images/urfandadashov/urfandadashov1808/urfandadashov180823933/109029889-bowl-vector-icon-isolated-on-transparent-background-bowl-logo-concept.jpg")
             }
         } catch (e: IOException) {
             e.printStackTrace()

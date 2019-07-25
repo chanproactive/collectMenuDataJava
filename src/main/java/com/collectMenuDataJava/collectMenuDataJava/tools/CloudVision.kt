@@ -1,21 +1,23 @@
 package com.collectMenuDataJava.collectMenuDataJava.tools
 
+import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModel
+import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModelKotlin
 import com.collectMenuDataJava.collectMenuDataJava.tools.googleReceiveModel.CloudReceiveModel
 import com.example.menudetection.model.FoodWithImage
 import com.example.menudetection.tools.ExtractImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import okhttp3.Call
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
+import java.util.concurrent.CompletableFuture
+
+
 
 class CloudVision() {
-    var foodWithImage: ArrayList<FoodWithImage> = arrayListOf()
 
-    fun request(base64 : String) {
+    fun request(base64 : String): ArrayList<ResponseModel> {
         val json = "{\"requests\": [\n" +
                 "{\n" +
                 "\"features\": [{\n" +
@@ -31,10 +33,10 @@ class CloudVision() {
                 "}\n" +
                 "]\n" +
                 "}"
-        detectImageWithCloudVisionApi(json)
+      return  detectImageWithCloudVisionApi(json)
     }
 
-    private fun detectImageWithCloudVisionApi(json: String) {
+    private fun detectImageWithCloudVisionApi(json: String): ArrayList<ResponseModel> {
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val body = json.toRequestBody(mediaType)
 
@@ -45,36 +47,46 @@ class CloudVision() {
                 .url("https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAmTJTlotJaN1HJfuH814plLChe4wvpXos")
                 .build()
 
-        client.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onResponse(call: Call, response: okhttp3.Response) {
-                if (response.isSuccessful) {
-                    val body = response.body?.string()
-                    val collectionType = object : TypeToken<CloudReceiveModel>() {}.type
-                    val enums = Gson().fromJson<String>(body, collectionType) as CloudReceiveModel
-                    val dataList = enums.responses?.get(0)?.textAnnotations as ArrayList<CloudReceiveModel.Response.TextAnnotation>
-                    val data: String? = dataList[0].description
-                    var array = data?.split("\n")?.toTypedArray()
-                    val a = array?.toMutableList()
-                    a!!.removeAt(array!!.size - 1)
-                    array = a.toTypedArray()
-                    thaiFilter(array)
-                    extractImageUrl()
 
-                }
-                call.cancel()
-            }
+        val response = client.newCall(request).execute()
+        if (response.isSuccessful) {
+            val body = response.body?.string()
+            val collectionType = object : TypeToken<CloudReceiveModel>() {}.type
+            val enums = Gson().fromJson<String>(body, collectionType) as CloudReceiveModel
+            val dataList = enums.responses?.get(0)?.textAnnotations as ArrayList<CloudReceiveModel.Response.TextAnnotation>
+            val data: String? = dataList[0].description
+            var array = data?.split("\n")?.toTypedArray()
+            val a = array?.toMutableList()
+            a!!.removeAt(array!!.size - 1)
+            array = a.toTypedArray()
 
-            private fun thaiFilter(array: Array<String>) {
+            return  thaiFilter(array)
+
+        }
+        else{
+            var responseModel: ArrayList<ResponseModel> = arrayListOf()
+            return responseModel
+        }
+
+    }
+
+
+            private fun thaiFilter(array: Array<String>): ArrayList<ResponseModel> {
                 var data = ArrayList<String>()
+                var responseModel: ArrayList<ResponseModel> = arrayListOf()
                 for (i in 0 until array.size) {
                     var stringArray = array[i].replace("[^\\u0E00-\\u0E7F|\\d|\\s|.]".toRegex(), "").trim()
                     if(stringArray.replace("[\\d|.]".toRegex(), "").trim() == "")
                         continue
                     if (stringArray != "" && stringArray.length > 3) {
                         data.add(stringArray)
-                        foodWithImage.add(FoodWithImage(stringArray))
+                        val model =ResponseModel()
+                        model.menuName = stringArray
+                        responseModel.add(model)
+
                     }
-                }
+               }
+                return responseModel
             }
 
             private fun extractImageUrl() {

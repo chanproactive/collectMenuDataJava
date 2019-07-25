@@ -1,5 +1,6 @@
 package com.collectMenuDataJava.collectMenuDataJava.Menu;
 
+import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModel;
 import com.collectMenuDataJava.collectMenuDataJava.tools.CloudVision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,9 +50,9 @@ public class MenuController {
     public ResponseEntity<?> postMenus(@RequestBody MenuList body) {
         MenuList menuList = menuService.createMenu(body);
         CloudVision cloud = new CloudVision();
-        cloud.request(menuList.getImageBase64());
+        ArrayList<ResponseModel> respond =cloud.request(menuList.getImageBase64());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(menuList);
+        return ResponseEntity.status(HttpStatus.CREATED).body(respond);
     }
 
     @PutMapping("/{id}")

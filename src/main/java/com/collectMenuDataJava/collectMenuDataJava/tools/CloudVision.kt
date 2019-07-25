@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture
 
 class CloudVision() {
 
-    fun request(base64 : String) {
+    fun request(base64 : String): ArrayList<ResponseModel> {
         val json = "{\"requests\": [\n" +
                 "{\n" +
                 "\"features\": [{\n" +
@@ -32,10 +32,10 @@ class CloudVision() {
                 "}\n" +
                 "]\n" +
                 "}"
-        detectImageWithCloudVisionApi(json)
+      return  detectImageWithCloudVisionApi(json)
     }
 
-    private fun detectImageWithCloudVisionApi(json: String) {
+    private fun detectImageWithCloudVisionApi(json: String): ArrayList<ResponseModel> {
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val body = json.toRequestBody(mediaType)
 
@@ -46,26 +46,31 @@ class CloudVision() {
                 .url("https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAmTJTlotJaN1HJfuH814plLChe4wvpXos")
                 .build()
 
-        client.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onResponse(call: Call, response: okhttp3.Response) {
-                if (response.isSuccessful) {
-                    val body = response.body?.string()
-                    val collectionType = object : TypeToken<CloudReceiveModel>() {}.type
-                    val enums = Gson().fromJson<String>(body, collectionType) as CloudReceiveModel
-                    val dataList = enums.responses?.get(0)?.textAnnotations as ArrayList<CloudReceiveModel.Response.TextAnnotation>
-                    val data: String? = dataList[0].description
-                    var array = data?.split("\n")?.toTypedArray()
-                    val a = array?.toMutableList()
-                    a!!.removeAt(array!!.size - 1)
-                    array = a.toTypedArray()
 
-                    thaiFilter(array)
+        val response = client.newCall(request).execute()
+        if (response.isSuccessful) {
+            val body = response.body?.string()
+            val collectionType = object : TypeToken<CloudReceiveModel>() {}.type
+            val enums = Gson().fromJson<String>(body, collectionType) as CloudReceiveModel
+            val dataList = enums.responses?.get(0)?.textAnnotations as ArrayList<CloudReceiveModel.Response.TextAnnotation>
+            val data: String? = dataList[0].description
+            var array = data?.split("\n")?.toTypedArray()
+            val a = array?.toMutableList()
+            a!!.removeAt(array!!.size - 1)
+            array = a.toTypedArray()
 
-                }
-                call.cancel()
-            }
+            return  thaiFilter(array)
 
-            private fun thaiFilter(array: Array<String>) {
+        }
+        else{
+            var responseModel: ArrayList<ResponseModel> = arrayListOf()
+            return responseModel
+        }
+
+    }
+
+
+            private fun thaiFilter(array: Array<String>): ArrayList<ResponseModel> {
                 var data = ArrayList<String>()
                 var responseModel: ArrayList<ResponseModel> = arrayListOf()
                 for (i in 0 until array.size) {
@@ -79,17 +84,10 @@ class CloudVision() {
                         responseModel.add(model)
 
                     }
-
-
-                }
+               }
+                return responseModel
             }
 
-
-            override fun onFailure(call: Call, e: IOException) {
-                call.cancel()
-            }
-        })
-    }
 }
 
 

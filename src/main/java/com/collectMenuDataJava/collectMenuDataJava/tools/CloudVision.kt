@@ -1,7 +1,6 @@
 package com.collectMenuDataJava.collectMenuDataJava.tools
 
 import com.collectMenuDataJava.collectMenuDataJava.tools.googleReceiveModel.CloudReceiveModel
-import com.example.menudetection.model.FoodWithImage
 import com.example.menudetection.tools.ExtractImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

@@ -67,13 +67,13 @@ class CloudVision() {
 
             private fun thaiFilter(array: Array<String>) {
                 var data = ArrayList<String>()
+                var responseModel: ArrayList<ResponseModel> = arrayListOf()
                 for (i in 0 until array.size) {
                     var stringArray = array[i].replace("[^\\u0E00-\\u0E7F|\\d|\\s|.]".toRegex(), "").trim()
                     if(stringArray.replace("[\\d|.]".toRegex(), "").trim() == "")
                         continue
                     if (stringArray != "" && stringArray.length > 3) {
                         data.add(stringArray)
-                        var responseModel: ArrayList<ResponseModel> = arrayListOf()
                         val model =ResponseModel()
                         model.menuName = stringArray
                         responseModel.add(model)

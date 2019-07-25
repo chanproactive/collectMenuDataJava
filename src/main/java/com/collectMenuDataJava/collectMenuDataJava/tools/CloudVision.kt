@@ -1,6 +1,7 @@
 package com.collectMenuDataJava.collectMenuDataJava.tools
 
 import com.collectMenuDataJava.collectMenuDataJava.tools.googleReceiveModel.CloudReceiveModel
+import com.example.menudetection.model.FoodWithImage
 import com.example.menudetection.tools.ExtractImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -12,6 +13,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 class CloudVision() {
+    var foodWithImage: ArrayList<FoodWithImage> = arrayListOf()
+
     fun request(base64 : String) {
         val json = "{\"requests\": [\n" +
                 "{\n" +
@@ -54,8 +57,8 @@ class CloudVision() {
                     val a = array?.toMutableList()
                     a!!.removeAt(array!!.size - 1)
                     array = a.toTypedArray()
-
                     thaiFilter(array)
+                    extractImageUrl()
 
                 }
                 call.cancel()
@@ -69,8 +72,18 @@ class CloudVision() {
                         continue
                     if (stringArray != "" && stringArray.length > 3) {
                         data.add(stringArray)
+                        foodWithImage.add(FoodWithImage(stringArray))
                     }
                 }
+            }
+
+            private fun extractImageUrl() {
+                foodWithImage.forEach {
+                        val extractImage = ExtractImage()
+                        val imageUrl = extractImage.extract(it.keyword.replace("[^\\u0E00-\\u0E7F|\\s]".toRegex(), "").trim())
+                        it.image = imageUrl
+                }
+                println(foodWithImage.toString())
             }
 
 

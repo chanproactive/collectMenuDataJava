@@ -1,0 +1,18 @@
+[
+  {
+    "menuName": "ข้าวต้มกุ้ง",
+    "MenuImageUrl": "https://img.wongnai.com/p/1920x0/2013/04/17/84e31e975cac4ea2be1625f7374dc9ef.jpg",
+    "price":"50",
+    "spicy": 0,
+    "rating": 5,
+    "tag": [8,3]
+  },
+  {
+    "menuName": "ข้าวต้มหมู",
+    "MenuImageUrl": "https://img.wongnai.com/p/1920x0/2013/04/17/ffe9226bbab04515983d84c6575890d9.jpg",
+    "price":"40",
+    "spicy": 1,
+    "rating": 4,
+    "tag": [8,3]
+  }
+]

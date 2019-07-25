@@ -14,10 +14,11 @@ import java.util.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import javax.security.auth.callback.Callback
 
-class CloudVision(base64: Base64) {
-    var base64: Base64 = base64
+class CloudVision(base64: String) {
 
-    fun request(String: Base64) {
+    val base64 = base64
+
+    fun request() {
         val json = "{\"requests\": [\n" +
                 "{\n" +
                 "\"features\": [{\n" +

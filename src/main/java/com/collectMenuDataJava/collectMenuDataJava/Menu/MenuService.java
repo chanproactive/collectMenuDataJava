@@ -23,9 +23,6 @@ public class MenuService {
         return repository.findById(id);
     }
 
-    public List<MenuList> retrieveMenuByName(String name) {
-        return repository.findByName(name);
-    }
 
     public MenuList createMenu(MenuList menuList) {
         return repository.save(menuList);

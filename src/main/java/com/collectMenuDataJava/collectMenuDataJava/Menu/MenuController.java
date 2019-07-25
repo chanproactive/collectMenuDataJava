@@ -35,11 +35,6 @@ public class MenuController {
         return ResponseEntity.ok(menuLists);
     }
 
-    @GetMapping(params = "name")
-    public ResponseEntity<?> getMenus(@RequestParam String name) {
-        List<MenuList> menuLists = menuService.retrieveMenuByName(name);
-        return ResponseEntity.ok(menuLists);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getMenu(@PathVariable String id) {

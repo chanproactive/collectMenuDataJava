@@ -7,10 +7,7 @@ import java.util.List;
 
 @Data
 public class MenuList {
-    @Id
-    private String id;
-    @NotNull
-    private String name;
+
     @NotNull
     private String imageUrl;
     @NotNull

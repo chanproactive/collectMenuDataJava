@@ -1,17 +1,21 @@
 package com.collectMenuDataJava.collectMenuDataJava.tools
 
+import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModel
+import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModelKotlin
 import com.collectMenuDataJava.collectMenuDataJava.tools.googleReceiveModel.CloudReceiveModel
 import com.example.menudetection.tools.ExtractImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import okhttp3.Call
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
+import java.util.concurrent.CompletableFuture
+
+
 
 class CloudVision() {
+
     fun request(base64 : String) {
         val json = "{\"requests\": [\n" +
                 "{\n" +
@@ -69,7 +73,14 @@ class CloudVision() {
                         continue
                     if (stringArray != "" && stringArray.length > 3) {
                         data.add(stringArray)
+                        var responseModel: ArrayList<ResponseModel> = arrayListOf()
+                        val model =ResponseModel()
+                        model.menuName = stringArray
+                        responseModel.add(model)
+
                     }
+
+
                 }
             }
 
@@ -80,3 +91,5 @@ class CloudVision() {
         })
     }
 }
+
+

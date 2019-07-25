@@ -1,6 +1,7 @@
 package com.collectMenuDataJava.collectMenuDataJava;
 
 import com.collectMenuDataJava.collectMenuDataJava.Menu.MenuList;
+import com.collectMenuDataJava.collectMenuDataJava.tools.CloudVision;
 import com.collectMenuDataJava.collectMenuDataJava.tools.Hello;
 import com.example.menudetection.tools.ExtractImage;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,6 @@ public class CollectMenuDataJavaApplication {
 		SpringApplication.run(CollectMenuDataJavaApplication.class, args);
 		Hello hello = new Hello();
 		hello.hello();
+        CloudVision cloudVision = new CloudVision();
 	}
-
 }

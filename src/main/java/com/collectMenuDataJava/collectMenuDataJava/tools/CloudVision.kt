@@ -1,21 +1,19 @@
 package com.collectMenuDataJava.collectMenuDataJava.tools
 
 import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModel
-import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModelKotlin
 import com.collectMenuDataJava.collectMenuDataJava.tools.googleReceiveModel.CloudReceiveModel
-import com.example.menudetection.model.FoodWithImage
 import com.example.menudetection.tools.ExtractImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import okhttp3.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.IOException
-import java.util.concurrent.CompletableFuture
 
 
-
-class CloudVision() {
+class CloudVision {
     var responseModel: ArrayList<ResponseModel> = arrayListOf()
 
     fun request(base64 : String): ArrayList<ResponseModel> {
@@ -87,16 +85,22 @@ class CloudVision() {
 
                     }
                }
-            //    extractImageUrl()
+                extractImageUrl()
                 return responseModel
             }
 
             private fun extractImageUrl() {
-                responseModel.forEach {
-                        val extractImage = ExtractImage()
-                        val imageUrl = extractImage.extract(it.menuName.replace("[^\\u0E00-\\u0E7F|\\s]".toRegex(), "").trim())
-                        it.menuImageUrl = imageUrl
+                GlobalScope.launch{
+
+                    responseModel.forEach {
+                    val extractImage = ExtractImage()
+                    val imageUrl = extractImage.extract(it.menuName.replace("[^\\u0E00-\\u0E7F|\\s]".toRegex(), "").trim())
+                    it.menuImageUrl = imageUrl
+                    print(it.menuImageUrl)}
+
                 }
-            }
+
+                }
+
 
 }

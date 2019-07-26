@@ -68,10 +68,7 @@ class CloudVision() {
             var responseModel: ArrayList<ResponseModel> = arrayListOf()
             return responseModel
         }
-
     }
-
-
             private fun thaiFilter(array: Array<String>): ArrayList<ResponseModel> {
                 var data = ArrayList<String>()
 
@@ -84,20 +81,42 @@ class CloudVision() {
                         val model =ResponseModel()
                         model.menuName = stringArray
                         responseModel.add(model)
-
-
                     }
                }
                 extractImageUrl()
                 return responseModel
             }
-
             private fun extractImageUrl() {
                 responseModel.forEach {
                         val extractImage = ExtractImage()
                         val imageUrl = extractImage.extract(it.menuName.replace("[^\\u0E00-\\u0E7F|\\s]".toRegex(), "").trim())
                         it.menuImageUrl = imageUrl
+                        var pork = "หมู"
+                        var squid = "หมึก"
+                        var shrimp = "กุ้ง"
+                        var chick = "ไก่"
+                        var fish = "ปลา"
+                        var cow = "วัว"
+                        if(it.menuName.toLowerCase().indexOf(pork.toLowerCase()) != -1) {
+                            it.tag = 1
+                        }
+                        if(it.menuName.toLowerCase().indexOf(squid.toLowerCase()) != -1) {
+                            it.tag =  7
+                        }
+                        if(it.menuName.toLowerCase().indexOf(shrimp.toLowerCase()) != -1) {
+                            it.tag =  4
+                        }
+                        if(it.menuName.toLowerCase().indexOf(chick.toLowerCase()) != -1) {
+                            it.tag = 5
+                        }
+                        if(it.menuName.toLowerCase().indexOf(fish.toLowerCase()) != -1) {
+                            it.tag =  2
+                        }
+                        if(it.menuName.toLowerCase().indexOf(cow.toLowerCase()) != -1) {
+                            it.tag =  3
+                        }
+                    it.spicy = (0..3).random()
+                    it.rating = (0..5).random()
                 }
             }
-
 }

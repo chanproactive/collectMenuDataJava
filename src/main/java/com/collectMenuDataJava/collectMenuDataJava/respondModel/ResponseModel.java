@@ -7,7 +7,7 @@ public class ResponseModel{
 	private int rating;
 	private String menuName;
 	private int spicy;
-	private List<Integer> tag;
+	private int tag;
 	private String menuImageUrl;
 
 	public void setPrice(String price){
@@ -42,11 +42,11 @@ public class ResponseModel{
 		return spicy;
 	}
 
-	public void setTag(List<Integer> tag){
+	public void setTag(Integer tag){
 		this.tag = tag;
 	}
 
-	public List<Integer> getTag(){
+	public Integer getTag(){
 		return tag;
 	}
 

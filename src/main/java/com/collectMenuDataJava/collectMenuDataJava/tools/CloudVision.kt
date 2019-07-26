@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture
 
 
 class CloudVision() {
+    var responseModel: ArrayList<ResponseModel> = arrayListOf()
 
     fun request(base64 : String): ArrayList<ResponseModel> {
         val json = "{\"requests\": [\n" +
@@ -73,7 +74,7 @@ class CloudVision() {
 
             private fun thaiFilter(array: Array<String>): ArrayList<ResponseModel> {
                 var data = ArrayList<String>()
-                var responseModel: ArrayList<ResponseModel> = arrayListOf()
+
                 for (i in 0 until array.size) {
                     var stringArray = array[i].replace("[^\\u0E00-\\u0E7F|\\d|\\s|.]".toRegex(), "").trim()
                     if(stringArray.replace("[\\d|.]".toRegex(), "").trim() == "")
@@ -84,24 +85,19 @@ class CloudVision() {
                         model.menuName = stringArray
                         responseModel.add(model)
 
+
                     }
                }
+                extractImageUrl()
                 return responseModel
             }
 
             private fun extractImageUrl() {
-                foodWithImage.forEach {
+                responseModel.forEach {
                         val extractImage = ExtractImage()
-                        val imageUrl = extractImage.extract(it.keyword.replace("[^\\u0E00-\\u0E7F|\\s]".toRegex(), "").trim())
-                        it.image = imageUrl
+                        val imageUrl = extractImage.extract(it.menuName.replace("[^\\u0E00-\\u0E7F|\\s]".toRegex(), "").trim())
+                        it.menuImageUrl = imageUrl
                 }
-                println(foodWithImage.toString())
             }
 
-
-            override fun onFailure(call: Call, e: IOException) {
-                call.cancel()
-            }
-        })
-    }
 }

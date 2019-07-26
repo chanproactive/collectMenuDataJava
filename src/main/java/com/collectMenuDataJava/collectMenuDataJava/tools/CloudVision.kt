@@ -85,10 +85,9 @@ class CloudVision() {
                         model.menuName = stringArray
                         responseModel.add(model)
 
-
                     }
                }
-                extractImageUrl()
+            //    extractImageUrl()
                 return responseModel
             }
 

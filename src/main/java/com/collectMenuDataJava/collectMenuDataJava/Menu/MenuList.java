@@ -14,7 +14,6 @@ public class MenuList {
     public MenuList() {
     }
 
-
     public String getImageUrl() {
         return imageUrl;
     }

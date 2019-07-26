@@ -2,17 +2,17 @@ package com.collectMenuDataJava.collectMenuDataJava.Menu;
 
 import com.collectMenuDataJava.collectMenuDataJava.respondModel.ResponseModel;
 import com.collectMenuDataJava.collectMenuDataJava.tools.CloudVision;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/menu")
@@ -26,37 +26,13 @@ public class MenuController {
             }
         };
     }
-    @Autowired
-    private MenuService menuService;
-
-    @GetMapping()
-    public ResponseEntity<?> getMenus() {
-        List<MenuList> menuLists = menuService.retrieveMenu();
-        return ResponseEntity.ok(menuLists);
-    }
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getMenu(@PathVariable String id) {
-        Optional<?> menu = menuService.retrieveMenu(id);
-        if (!menu.isPresent()) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(menu);
-    }
 
     @PostMapping()
     public ResponseEntity<?> postMenus(@RequestBody MenuList body) {
-        MenuList menuList = menuService.createMenu(body);
         CloudVision cloud = new CloudVision();
-        ArrayList<ResponseModel> respond =cloud.request(menuList.getImageBase64());
+        ArrayList<ResponseModel> respond =cloud.request(body.getImageBase64());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(respond);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> putMenus(@PathVariable String id, @RequestBody MenuList body) {
-        Optional<?> menu = menuService.updateMenu(id, body);
-        return ResponseEntity.ok(menu);
-    }
 }
